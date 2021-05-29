@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <title>Marshall Science Fair Evaluator</title>
+        <link rel = "stylesheet" href = "{% static 'evaluator/styles.css'%}">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Maven+Pro&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    </head>
+    <body>
+        <div class = "nav"> 
+            <a href = "{% url 'home'%}">Home</a>
+            <a href = "{% url 'logout'%}"id  = "right">Logout</a>
+        </div>
+        <div class = "home">
+        <form action = "{% url 'search' %}" method = "post">
+            {% csrf_token %}
+            <input class = "home" type = "text" placeholder = "Project ID" name = "projects">
+            <input type = "hidden" name = "judge" value = "{{judge}}">
+        </form>
+    
+        {% if projectid is None %}  
+            <h1 class = "homeh1">Please enter a project into the field above</h1>
+            <p>{{message}}</p>
+        {% else %}
+            <h1 class = "homeh1">Evaluation for ProjectID: {{projectid}}</h1>
+            {% if project.p_type is Engineering %}
+            <form action = "{% url 'save_points' %}" method = "post"> 
+                {% csrf_token %}
+                <input type = "hidden" value = "{{projectid}}" name = "projID"> 
+                <input type = "hidden" name = "judge" value = "{{judge}}">
+                <h2>Research Problem:</h2>
+                <ul>
+                    <li>
+                        Description of a practical need or problem to be solved
+                    </li>
+                    <li>
+                        Definition of criteria for proposed solution
+                    </li>
+                    <li>
+                        Explanation of constraints
+                    </li>
+                </ul>
+                <input type="range" min="0" max="10" value="{{project.research_question}}" class="slider" id="rq" name = "researchQuestion">
+                <p>Points Awarded: <span id="rqp"></span></p>
+    
+                <h2>Design and Methodology:</h2>
+                <ul>
+                    <li>
+                        Exploration of alternatives to answer need or problem
+                    </li>
+                    <li>
+                        Identification of a solution
+                    </li>
+                    <li>
+                        Development of a prototype/model
+                    </li>
+                </ul>
+                <input type="range" min="0" max="15" value="{{project.dam}}" class="slider" id="dam" name = "DAM">
+                <p>Points Awarded: <span id="damp"></span></p>
+                <h2>Execution: Construction and Testing</h2>
+                <ul>
+                    <li>
+                        Prototype demonstrates intended design
+                    </li>
+                    <li>
+                        Prototype has been tested in multiple conditions/trials
+                    </li>
+                    <li>
+                        Prototype demonstrates engineering skill and completeness
+                    </li>
+                </ul>
+                <input type="range" min="0" max="20" value="{{project.execution}}" class="slider" id="exe" name = "execution">
+                <p>Points Awarded: <span id="exep"></span></p>
+                <h2>Creativity:</h2>
+                <ul>
+                    <li>
+                        Project demonstrates significant creativity in one or more of the above criteria
+                    </li>
+                </ul>
+                <input type="range" min="0" max="20" value="{{project.creativity}}" class="slider" id="cre" name = "creativity">
+                <p>Points Awarded: <span id="crep"></span></p>
+                <h2>Presentation:</h2>
+                <h3>Poster (10 pts)</h3>
+                <ul>
+                    <li>
+                        Logical organization of material
+                    </li>
+                    <li>
+                        Clarity of graphics and legends
+                    </li>
+                    <li>
+                        Supporting documentation displayed
+                    </li>
+                </ul>
+                <h3>Interview (25 pts)</h3>
+                <ul>
+                    <li>
+                        Clear, concise, thoughtful responses to questions
+                    </li>
+                    <li>
+                        Understanding of basic science relevant to project
+                    </li>
+                    <li>
+                        Understanding interpretation and limitations of results and conclusions
+                    </li>
+                    <li>
+                        Degree of independance in conducting the project 
+                    </li>
+                    <li>
+                        Recognition of potential impact in science, society, and/or economics
+                    </li>
+                    <li>
+                        Quality of ideas for further research
+                    </li>
+                    <li>
+                        For team projects, contributions to and understanding of project by all members 
+                    </li>
+                </ul>
+                <input type="range" min="0" max="35" value="{{project.presentation}" class="slider" id="pre" name = "presentation">
+                <p>Points Awarded: <span id="prep"></span></p>
+                <center><input type = "submit" value = "Submit Score"></center> 
+            </form>
+            {% else %}
+            <form action = "{% url 'save_points' %}"  method = "post"> 
+            <input type = "hidden" name = "projID" value = "{{projectid}}">
+            <input type = "hidden" name = "judge" value = "{{judge}}">
+            {% csrf_token %}
+            <h2>Research Question:</h2>
+            <ul>
+                <li>
+                    Clear and focused purpose
+                </li>
+                <li>
+                    Identifies contribution to field of study
+                </li>
+                <li>
+                    Testable using scientific methods
+                </li>
+            </ul>
+            <input type="range" min="0" max="10" value="{{project.research_question}}" class="slider" id="rq" name = "researchQuestion">
+            <p>Points Awarded: <span id="rqp"></span></p>
+
+            <h2>Design and Methodology:</h2>
+            <ul>
+                <li>
+                    Well designed plan & data collection methods
+                </li>
+                <li>
+                    Variables and controls defined, appropriate & complete
+                </li>
+            </ul>
+            <input type="range" min="0" max="15" value="{{project.dam}}" class="slider" id="dam" name = "DAM">
+            <p>Points Awarded: <span id="damp"></span></p>
+            <h2>Execution: Data Collection, Analysis & Interpretation:</h2>
+            <ul>
+                <li>
+                    Systematic data collection and analysis
+                </li>
+                <li>
+                    Reproductibility of results
+                </li>
+                <li>
+                    Appropriate application of mathematical and statistical methods
+                </li>
+                <li>
+                    Sufficient data collected to support interpretation and conclusions
+                </li>
+            </ul>
+            <input type="range" min="0" max="20" value="{{project.execution}}" class="slider" id="exe" name = "execution">
+            <p>Points Awarded: <span id="exep"></span></p>
+            <h2>Creativity:</h2>
+            <ul>
+                <li>
+                    Project demonstrates significant creativity in one or more of the above criteria
+                </li>
+            </ul>
+            <input type="range" min="0" max="20" value="{{project.creativity}}" class="slider" id="cre" name = "creativity">
+            <p>Points Awarded: <span id="crep"></span></p>
+            <h2>Presentation:</h2>
+            <h3>Poster (10 pts)</h3>
+            <ul>
+                <li>
+                    Logical organization of material
+                </li>
+                <li>
+                    Clarity of graphics and legends
+                </li>
+                <li>
+                    Supporting documentation displayed
+                </li>
+            </ul>
+            <h3>Interview (25 pts)</h3>
+            <ul>
+                <li>
+                    Clear, concise, thoughtful responses to questions
+                </li>
+                <li>
+                    Understanding of basic science relevant to project
+                </li>
+                <li>
+                    Understanding interpretation and limitations of results and conclusions
+                </li>
+                <li>
+                    Degree of independance in conducting the project 
+                </li>
+                <li>
+                    Recognition of potential impact in science, society, and/or economics
+                </li>
+                <li>
+                    Quality of ideas for further research
+                </li>
+                <li>
+                    For team projects, contributions to and understanding of project by all members 
+                </li>
+            </ul>
+            <input type="range" min="0" max="35" value="{{project.presentation}}" class="slider" id="pre" name = "presentation">
+            <p>Points Awarded: <span id="prep"></span></p>
+            <center><input type = "submit" value = "Submit Score"></center> 
+         
+            </form>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <script>
+        var rq = document.getElementById("rq");
+        var rqp = document.getElementById("rqp");
+        rqp.innerHTML = rq.value;
+        
+        rq.oninput = function() {
+          rqp.innerHTML = this.value;
+        }
+        var dam = document.getElementById("dam");
+        var damp = document.getElementById("damp");
+        damp.innerHTML = dam.value;
+        
+        dam.oninput = function() {
+            damp.innerHTML = this.value;
+        }
+
+        var cre = document.getElementById("cre");
+        var crep = document.getElementById("crep");
+        crep.innerHTML = cre.value;
+        
+        cre.oninput = function() {
+            crep.innerHTML = this.value;
+        }
+
+        var exe = document.getElementById("exe");
+        var exep = document.getElementById("exep");
+        exep.innerHTML = exe.value;
+        
+        exe.oninput = function() {
+            exep.innerHTML = this.value;
+        }
+        var pre = document.getElementById("pre");
+        var prep = document.getElementById("prep");
+        prep.innerHTML = pre.value;
+        
+        pre.oninput = function() {
+            prep.innerHTML = this.value;
+        }
+        </script>
+    </body>
+</html>
